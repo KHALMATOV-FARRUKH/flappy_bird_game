@@ -19,6 +19,8 @@ class _HomePageState extends State<HomePage> {
   bool gameHasStarted = false;
   static double barrierXone = 1;
   double barrierXtwo = barrierXone + 1.5;
+  int score = 0;
+  int highscore = 0;
 
   void jump() {
     setState(() {
@@ -52,14 +54,47 @@ class _HomePageState extends State<HomePage> {
         }
       });
 
-      // barrierXone -= 0.04;
-      // barrierXtwo -= 0.04;
-
       if (birdYaxis > 1) {
         timer.cancel();
         gameHasStarted = false;
       }
     });
+  }
+
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.brown,
+            title: Text(
+              "GAME OVER",
+              style: TextStyle(color: Colors.white),
+            ),
+            content: Text(
+              "Score" + score.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+            actions: [
+              FlatButton(
+                child: Text(
+                  "PLAY AGAIN",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  if (score > highscore) {
+                    highscore = score;
+                  }
+                  initState();
+                  setState(() {
+                    gameHasStarted = false;
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
@@ -151,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          "0",
+                          "$score",
                           style: TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
@@ -173,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(height: 20),
                         Text(
-                          "10",
+                          "$highscore",
                           style: TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.bold,
